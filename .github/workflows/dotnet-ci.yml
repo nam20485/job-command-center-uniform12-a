@@ -1,0 +1,56 @@
+name: .NET CI
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'JobCommandCenter/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'JobCommandCenter/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+        include-prerelease: true
+    
+    - name: Restore dependencies
+      working-directory: JobCommandCenter
+      run: dotnet restore
+    
+    - name: Build
+      working-directory: JobCommandCenter
+      run: dotnet build --no-restore --configuration Release
+    
+    - name: Test
+      working-directory: JobCommandCenter
+      run: dotnet test --no-build --configuration Release --verbosity normal
+
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+        include-prerelease: true
+    
+    - name: Install dotnet-format
+      run: dotnet tool install -g dotnet-format
+      
+    - name: Check formatting
+      working-directory: JobCommandCenter
+      run: dotnet-format --verify-no-changes --verbosity detailed

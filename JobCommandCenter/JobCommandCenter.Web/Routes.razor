@@ -1,0 +1,24 @@
+@using JobCommandCenter.Web.Components.Layout
+
+<Router AppAssembly="typeof(Program).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="typeof(MainLayout)">
+            <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8">
+                <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">
+                    Page Not Found
+                </MudText>
+                <MudText Typo="Typo.body1" Align="Align.Center">
+                    Sorry, there's nothing at this address.
+                </MudText>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/" Class="mt-4">
+                    Go Home
+                </MudButton>
+            </MudContainer>
+        </LayoutView>
+    </NotFound>
+</Router>

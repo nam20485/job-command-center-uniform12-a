@@ -1,0 +1,102 @@
+@page "/"
+@attribute [StreamRendering]
+@using JobCommandCenter.Shared.Enums
+
+<PageTitle>Dashboard - Job Command Center</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Dashboard</MudText>
+
+<MudGrid>
+    <MudItem xs="12" md="3">
+        <MudPaper Class="pa-4" Elevation="2">
+            <MudText Typo="Typo.caption" Color="Color.Secondary">Total Jobs</MudText>
+            <MudText Typo="Typo.h4">@_totalJobs</MudText>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" md="3">
+        <MudPaper Class="pa-4" Elevation="2">
+            <MudText Typo="Typo.caption" Color="Color.Secondary">Scored Jobs</MudText>
+            <MudText Typo="Typo.h4">@_scoredJobs</MudText>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" md="3">
+        <MudPaper Class="pa-4" Elevation="2">
+            <MudText Typo="Typo.caption" Color="Color.Secondary">Applied</MudText>
+            <MudText Typo="Typo.h4">@_appliedJobs</MudText>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" md="3">
+        <MudPaper Class="pa-4" Elevation="2">
+            <MudText Typo="Typo.caption" Color="Color.Secondary">Harvester Status</MudText>
+            <MudChip T="string" Color="@(_harvesterRunning ? Color.Success : Color.Error)" Size="Size.Small">
+                @(_harvesterRunning ? "Running" : "Stopped")
+            </MudChip>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+<MudDivider Class="my-4" />
+
+<MudText Typo="Typo.h5" GutterBottom="true">Recent Jobs</MudText>
+
+<MudTable Items="@_recentJobs" Hover="true" Striped="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>Title</MudTh>
+        <MudTh>Company</MudTh>
+        <MudTh>Location</MudTh>
+        <MudTh>Score</MudTh>
+        <MudTh>Status</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Title">@context.Title</MudTd>
+        <MudTd DataLabel="Company">@context.Company</MudTd>
+        <MudTd DataLabel="Location">@context.Location</MudTd>
+        <MudTd DataLabel="Score">
+            <MudChip T="string" Color="@GetScoreColor(context.Score)" Size="Size.Small">
+                @(context.Score.ToString("F0"))
+            </MudChip>
+        </MudTd>
+        <MudTd DataLabel="Status">
+            <MudChip T="string" Color="@GetStatusColor(context.Status)" Size="Size.Small">
+                @context.Status.ToString()
+            </MudChip>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private int _totalJobs = 0;
+    private int _scoredJobs = 0;
+    private int _appliedJobs = 0;
+    private bool _harvesterRunning = false;
+    private List<Job> _recentJobs = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // TODO: Load data from services
+        await Task.CompletedTask;
+    }
+
+    private Color GetScoreColor(int score)
+    {
+        return score switch
+        {
+            >= 80 => Color.Success,
+            >= 60 => Color.Info,
+            >= 40 => Color.Warning,
+            _ => Color.Error
+        };
+    }
+
+    private Color GetStatusColor(JobStatus status)
+    {
+        return status switch
+        {
+            JobStatus.Found => Color.Info,
+            JobStatus.Scored => Color.Success,
+            JobStatus.Applied => Color.Primary,
+            JobStatus.Archive => Color.Error,
+            _ => Color.Default
+        };
+    }
+}

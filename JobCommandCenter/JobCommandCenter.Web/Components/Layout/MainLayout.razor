@@ -1,0 +1,40 @@
+@inherits LayoutComponentBase
+
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
+        <MudText Typo="Typo.h5" Class="ml-3">Job Command Center</MudText>
+        <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Filled.Refresh" Color="Color.Inherit" OnClick="@RefreshData" />
+        <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Inherit" Href="/settings" />
+    </MudAppBar>
+
+    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+        <MudNavMenu>
+            <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+            <MudNavLink Href="/jobs" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Work">Jobs</MudNavLink>
+            <MudNavLink Href="/scoring" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Star">Scoring</MudNavLink>
+            <MudNavLink Href="/harvester" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.SettingsEthernet">Harvester</MudNavLink>
+        </MudNavMenu>
+    </MudDrawer>
+
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="my-4">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    private bool _drawerOpen = true;
+
+    private void ToggleDrawer()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    private void RefreshData()
+    {
+        // TODO: Implement refresh logic
+    }
+}
